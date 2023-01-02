@@ -15,9 +15,10 @@ class Player(pg.sprite.Sprite):
         self.rect.y = y
         self.pos: pg.math.Vector2 = pg.math.Vector2(x, y)
         self.look_dir: pg.math.Vector2 = pg.math.Vector2()
+        self.v: float = 10.0
 
     def move(self, dx, dy):
-        self.pos.x += dx
-        self.pos.y += dy
+        self.pos.x += dx * self.v
+        self.pos.y += dy * self.v
         self.rect.centerx = self.pos.x
         self.rect.centery = self.pos.y
