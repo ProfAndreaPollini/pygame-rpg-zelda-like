@@ -22,3 +22,9 @@ class Player(pg.sprite.Sprite):
         self.pos.y += dy * self.v
         self.rect.centerx = self.pos.x
         self.rect.centery = self.pos.y
+
+    def set(self, x, y):
+        self.pos.x = x
+        self.pos.y = y
+        self.rect.centerx = self.pos.x
+        self.rect.centery = self.pos.y

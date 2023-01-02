@@ -8,7 +8,7 @@ pg.init()
 screen = pg.display.set_mode(SCREEN_SIZE)
 clock = pg.time.Clock()
 
-player = Player(50, 50)
+player = Player(0, 0)
 
 
 class Camera(pg.sprite.Group):
@@ -38,9 +38,10 @@ running = True
 
 dt = 0
 
-world = World.from_tmx("assets/maps/map0.tmx", "config/world.sprites.json")
-print(world)
+world = World.from_tmx("assets/maps/map0.tmx",
+                       "config/world.sprites.json", player)
 
+print(player.rect.center)
 
 def handle_input():
     keys = pg.key.get_pressed()  # recupero tutti i tasti premuti (List[bool])
@@ -73,7 +74,7 @@ while running:
 
     handle_input()
 
-    screen.fill("black")
+    screen.fill("gray")
 
     # show sprite
     # screen.blit(player.image, player.rect)

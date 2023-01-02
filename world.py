@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 import pygame as pg
+from player import Player
 
 from settings import SPRITE_SIZE, SPRITE_SCALE
 from spritesheet import Spritesheet
@@ -51,7 +52,7 @@ class World:
       name = self.tiles[i].name
 
       s = self.spritesheet.get_surface(name)
-      # print(f"{row=} {col=} {name=} {s=}")
+      #print(f"{row=} {col=} {name=} {s=}")
       self.surface.blit(
           s, (col * self.tile_size[1]*SPRITE_SCALE, row*self.tile_size[0]*SPRITE_SCALE))
 
@@ -59,13 +60,15 @@ class World:
     return f"{self.size=} |> {self.tiles}"
 
   @staticmethod
-  def from_tmx(tmx_filename: str, spritesheet_conf_file: str) -> "World":
+  def from_tmx(tmx_filename: str, spritesheet_conf_file: str, player: Player) -> "World":
     tmxdata = load_pygame(tmx_filename)
 
     terrain: TiledTileLayer = tmxdata.get_layer_by_name("terrain")
-
+    player_object = tmxdata.get_object_by_name("player")
     print(f"{terrain.width=} {terrain.height=}")
-
+    print(player_object.x,player_object.y)
+    print(player_object.x*SPRITE_SCALE, player_object.y*SPRITE_SCALE)
+    player.set(player_object.x*SPRITE_SCALE, player_object.y*SPRITE_SCALE)
     world = World()
     world.size = (terrain.height, terrain.width)
     gids = set()
@@ -80,6 +83,7 @@ class World:
         # print(world.tiles[x + y * terrain.width].name)
       gids.add(gid)
 
+    print(gids)
     for gid in list(gids):
       s = tmxdata.get_tile_image_by_gid(gid)
       if s is not None:

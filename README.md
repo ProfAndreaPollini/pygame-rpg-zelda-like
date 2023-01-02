@@ -18,7 +18,7 @@
 14. importazione di una mappa da tiled
 15. pygame groups & camera
 16. velocita del player 
-
+17. posizionare il player sulla mappa
 
 ## credits
 
