@@ -20,6 +20,8 @@ class Player(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
+
+
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
@@ -35,11 +37,25 @@ running = True
 
 dt = 0
 
+
+def handle_input():
+  keys = pg.key.get_pressed()  # recupero tutti i tasti premuti (List[bool])
+  if keys[pg.K_a]:
+    player.move(-1, 0)
+  elif keys[pg.K_s]:
+    player.move(0, 1)
+  elif keys[pg.K_d]:
+    player.move(1, 0)
+  elif keys[pg.K_w]:
+    player.move(0, -1)
+
 while running:
     dt = clock.tick(60)
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
+
+    handle_input()
 
     screen.fill("black")
 

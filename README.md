@@ -7,7 +7,7 @@
 3. creazione della classe Player(pg.sprite.Sprite) e rappresentazione a schermo
 4. fix del clock a 60 fps
 5. movimento dello sprite
-6. input utente per muovere lo sprite (AWSD)
+6. input utente per muovere lo sprite (ASWD) 4 direzioni
 
 ## credits
 
