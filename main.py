@@ -15,7 +15,7 @@ class Player(pg.sprite.Sprite):
         player_sprite = pg.transform.scale(
             player_sprite, (original_size[0]*SPRITE_SCALE, original_size[1]*SPRITE_SCALE))
 
-        self.image : pg.surface.Surface = player_sprite
+        self.image: pg.surface.Surface = player_sprite
         self.rect: pg.rect.Rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -33,20 +33,21 @@ player = Player(50, 50)
 
 running = True
 
+dt = 0
 
 while running:
+    dt = clock.tick(60)
     for event in pg.event.get():
         if event.type == pg.QUIT:
             running = False
 
     screen.fill("black")
 
-    
-
     # show sprite
     screen.blit(player.image, player.rect)
-
-    pg.display.flip()
+    
+    pg.display.update()
+    
 
 
 pg.quit()
