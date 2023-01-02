@@ -6,8 +6,8 @@
 2. caricamento di un singolo sprite dallo spritesheet
 3. creazione della classe Player(pg.sprite.Sprite) e rappresentazione a schermo
 4. fix del clock a 60 fps
-3. movimento dello sprite
-
+5. movimento dello sprite
+6. input utente per muovere lo sprite (AWSD)
 
 ## credits
 
