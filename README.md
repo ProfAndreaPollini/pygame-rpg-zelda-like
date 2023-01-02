@@ -1,5 +1,10 @@
 
 
+## Roadmap
+
+1. caricamento sprite per il player
+
+
 
 ## credits
 
