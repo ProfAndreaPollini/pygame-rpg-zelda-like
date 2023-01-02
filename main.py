@@ -19,7 +19,7 @@ class Player(pg.sprite.Sprite):
         self.rect: pg.rect.Rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
+        self.look_dir: pg.math.Vector2 = pg.math.Vector2()
 
 
     def move(self, dx, dy):
@@ -40,14 +40,21 @@ dt = 0
 
 def handle_input():
   keys = pg.key.get_pressed()  # recupero tutti i tasti premuti (List[bool])
+
+  look_dir = pg.math.Vector2()
+
   if keys[pg.K_a]:
-    player.move(-1, 0)
-  elif keys[pg.K_s]:
-    player.move(0, 1)
-  elif keys[pg.K_d]:
-    player.move(1, 0)
-  elif keys[pg.K_w]:
-    player.move(0, -1)
+    look_dir.x = -1
+  if keys[pg.K_s]:
+    look_dir.y = 1
+  if keys[pg.K_d]:
+    look_dir.x = 1
+  if keys[pg.K_w]:
+    look_dir.y = -1
+
+  
+  player.look_dir = look_dir
+  player.move(look_dir.x,look_dir.y)
 
 while running:
     dt = clock.tick(60)

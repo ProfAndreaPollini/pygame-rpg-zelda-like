@@ -8,6 +8,7 @@
 4. fix del clock a 60 fps
 5. movimento dello sprite
 6. input utente per muovere lo sprite (ASWD) 4 direzioni
+7. movimento nelle 8 direzioni
 
 ## credits
 
