@@ -21,7 +21,7 @@ class Spritesheet:
     for sprite_config in config:
       name, pos, size, scale = sprite_config["name"], sprite_config["pos"], sprite_config.get(
           "size", (SPRITE_SIZE, SPRITE_SIZE)), sprite_config.get("scale", SPRITE_SCALE)
-      self.define_surface(name, pos[1], pos[0], size, scale)
+      self.define_surface(name, pos[0], pos[1], size, scale)
 
   def define_surface(self, name: str, row: int, col: int, size=(SPRITE_SIZE, SPRITE_SIZE), scale=SPRITE_SCALE) -> None:
     "define a new surface for the current spritesheet"

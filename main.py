@@ -2,6 +2,7 @@ import pygame as pg
 from settings import SCREEN_SIZE, SPRITE_SCALE
  
 from player import Player
+from world import World
 
 pg.init()
 screen = pg.display.set_mode(SCREEN_SIZE)
@@ -13,6 +14,8 @@ running = True
 
 dt = 0
 
+world = World.from_file("config/world.map.txt", "config/world.sprites.json")
+print(world)
 
 def handle_input():
     keys = pg.key.get_pressed()  # recupero tutti i tasti premuti (List[bool])
@@ -44,7 +47,7 @@ while running:
     handle_input()
 
     screen.fill("black")
-
+    screen.blit(world.surface, (100, 100))
     # show sprite
     screen.blit(player.image, player.rect)
 

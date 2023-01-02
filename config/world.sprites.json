@@ -1,0 +1,13 @@
+{
+  "spritesheet": "assets/PixelMood4/Pixel Mood/Tiles/Paths, water and cliffs.png",
+  "sprites": [
+    {
+      "name": "floor",
+      "pos": [1,5]
+    },
+    {
+      "name": "wall",
+      "pos": [1,8]
+    }
+  ]
+}
