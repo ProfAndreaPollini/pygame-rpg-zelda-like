@@ -11,7 +11,7 @@
 7. movimento nelle 8 direzioni
 8. fix movimento diagonale e inserimento vettore float per le posizioni
 9. refactor della classe player + spritesheet class (primo passo)
-10. generalizziamo Spritesheet.get_player_surface(self)
+10. generalizziamo Spritesheet.get_player_surface(self) -> Spritesheet.get_surface(self,row,col,size=..., scale  = ...)
 
 ## credits
 

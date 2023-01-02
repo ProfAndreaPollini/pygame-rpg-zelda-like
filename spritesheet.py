@@ -9,10 +9,13 @@ class Spritesheet:
     self.spritesheet = pg.image.load(filename).convert_alpha()
 
   def get_player_surface(self) -> pg.surface.Surface:
-    player_sprite = self.spritesheet.subsurface(
-        (0, 0, SPRITE_SIZE, SPRITE_SIZE))
-    original_size = player_sprite.get_size()
+    return self.get_surface(0, 0)
 
-    player_sprite = pg.transform.scale(
-        player_sprite, (original_size[0]*SPRITE_SCALE, original_size[1]*SPRITE_SCALE))
-    return player_sprite
+  def get_surface(self, row, col, size=(SPRITE_SIZE, SPRITE_SIZE), scale=SPRITE_SCALE):
+    sprite_subsurface = self.spritesheet.subsurface(
+        (col*size[0], row*size[1], *size))
+    original_size = sprite_subsurface.get_size()
+
+    scaled = pg.transform.scale(
+        sprite_subsurface, (original_size[0]*scale, original_size[1]*scale))
+    return scaled
