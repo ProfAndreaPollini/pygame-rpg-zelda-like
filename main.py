@@ -14,7 +14,7 @@ running = True
 
 dt = 0
 
-world = World.from_file("config/world.map.txt", "config/world.sprites.json")
+world = World.from_tmx("assets/maps/map0.tmx", "config/world.sprites.json")
 print(world)
 
 def handle_input():
@@ -47,7 +47,7 @@ while running:
     handle_input()
 
     screen.fill("black")
-    screen.blit(world.surface, (100, 100))
+    screen.blit(world.surface, (0, 0))
     # show sprite
     screen.blit(player.image, player.rect)
 

@@ -15,6 +15,8 @@
 11. possibilità di definire degli sprite per nome e recuperare i riferimenti alla surface relativa (Spritesheet.py)
 12. configurazione dello spritesheet da file json
 13. creazione e caricamento di una mappa da file di testo
+14. importazione di una mappa da tiled
+
 
 ## credits
 
