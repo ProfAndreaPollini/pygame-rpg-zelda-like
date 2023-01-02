@@ -9,6 +9,7 @@
 5. movimento dello sprite
 6. input utente per muovere lo sprite (ASWD) 4 direzioni
 7. movimento nelle 8 direzioni
+8. fix movimento diagonale e inserimento vettore float per le posizioni
 
 ## credits
 
