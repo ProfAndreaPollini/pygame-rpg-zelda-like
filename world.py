@@ -51,7 +51,7 @@ class World:
       name = self.tiles[i].name
 
       s = self.spritesheet.get_surface(name)
-      print(f"{row=} {col=} {name=} {s=}")
+      # print(f"{row=} {col=} {name=} {s=}")
       self.surface.blit(
           s, (col * self.tile_size[1]*SPRITE_SCALE, row*self.tile_size[0]*SPRITE_SCALE))
 
@@ -74,10 +74,10 @@ class World:
     for i in range((terrain.width * terrain.height)):
       world.tiles.append(Tile("0"))
     for x, y, gid in terrain.iter_data():
-      print(x, y, gid)
+      # print(x, y, gid)
       if gid > 0:
         world.tiles[x + y * terrain.width].name = str(gid)
-        print(world.tiles[x + y * terrain.width].name)
+        # print(world.tiles[x + y * terrain.width].name)
       gids.add(gid)
 
     for gid in list(gids):

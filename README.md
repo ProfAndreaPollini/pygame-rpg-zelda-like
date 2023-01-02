@@ -16,7 +16,7 @@
 12. configurazione dello spritesheet da file json
 13. creazione e caricamento di una mappa da file di testo
 14. importazione di una mappa da tiled
-
+15. pygame groups & camera
 
 ## credits
 
