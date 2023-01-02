@@ -1,0 +1,9 @@
+{
+  "spritesheet": "assets/PixelMood4/Pixel Mood/Chars/Heros/Sprite sheet female hero.png",
+  "sprites": [
+    {
+      "name": "idle_up",
+      "pos": [0,0]
+    }
+  ]
+}

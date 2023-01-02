@@ -13,6 +13,7 @@
 9. refactor della classe player + spritesheet class (primo passo)
 10. generalizziamo Spritesheet.get_player_surface(self) -> Spritesheet.get_surface(self,row,col,size=..., scale  = ...)
 11. possibilità di definire degli sprite per nome e recuperare i riferimenti alla surface relativa (Spritesheet.py)
+12. configurazione dello spritesheet da file json
 
 ## credits
 
