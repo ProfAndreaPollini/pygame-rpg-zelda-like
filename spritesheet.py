@@ -6,18 +6,18 @@ from settings import SCREEN_SIZE, SPRITE_SCALE, SPRITE_SIZE
 
 
 class Spritesheet:
+  def __init__(self):
+    self.sprites: Dict[str, pg.surface.Surface] = {}
 
-  def __init__(self, filename: str) -> None:
+  def load_from_json(self, filename: str) -> None:
     with open(filename, 'r') as file:
       # Load the JSON data
       spritesheet_config = json.load(file)
     self.spritesheet = pg.image.load(
         spritesheet_config["spritesheet"]).convert_alpha()
-    self.sprites: Dict[str, pg.surface.Surface] = {}
+    self.__sprites_setup(spritesheet_config["sprites"])
 
-    self.sprites_setup(spritesheet_config["sprites"])
-
-  def sprites_setup(self, config: List[Any]):
+  def __sprites_setup(self, config: List[Any]):
     for sprite_config in config:
       name, pos, size, scale = sprite_config["name"], sprite_config["pos"], sprite_config.get(
           "size", (SPRITE_SIZE, SPRITE_SIZE)), sprite_config.get("scale", SPRITE_SCALE)
@@ -32,6 +32,13 @@ class Spritesheet:
     scaled = pg.transform.scale(
         sprite_subsurface, (original_size[0]*scale, original_size[1]*scale))
     self.sprites[name] = scaled
+
+  def add_sprite(self, name: str, surface: pg.surface.Surface, scale=SPRITE_SCALE):
+    s = surface.copy()
+    original_size = s.get_size()
+    s = pg.transform.scale(
+        s, (original_size[0]*scale, original_size[1]*scale))
+    self.sprites[name] = s
 
   def get_player_surface(self) -> pg.surface.Surface:
     return self.get_surface("idle_up")

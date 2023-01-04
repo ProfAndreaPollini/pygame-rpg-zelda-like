@@ -20,6 +20,10 @@
 16. velocita del player 
 17. posizionare il player sulla mappa
 
+### todo
+
+- [ ] spritesheet refactor ( Spritesheet e WorldSpritesheet sono la stessa classe in fondo)
+
 ## credits
 
 pixel mood assets: https://alwore.itch.io/pixel-mood

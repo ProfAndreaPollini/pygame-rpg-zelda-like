@@ -7,7 +7,8 @@ class Player(pg.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
 
-        self.spritesheet = Spritesheet("config/player.sprites.json")
+        self.spritesheet = Spritesheet()
+        self.spritesheet.load_from_json("config/player.sprites.json")
 
         self.image: pg.surface.Surface = self.spritesheet.get_player_surface()
         self.rect: pg.rect.Rect = self.image.get_rect()

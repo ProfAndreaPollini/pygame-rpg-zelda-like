@@ -27,7 +27,7 @@
 </data>
  </layer>
  <objectgroup color="#ff0000" id="3" name="player">
-  <object id="3" name="player" x="208" y="176" width="84" height="19">
+  <object id="3" name="player" x="208" y="176" width="16" height="16">
    <text wrap="1">P</text>
   </object>
  </objectgroup>
