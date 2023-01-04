@@ -73,6 +73,7 @@ while running:
             running = False
 
     handle_input()
+    player.update(dt)
 
     screen.fill("gray")
 

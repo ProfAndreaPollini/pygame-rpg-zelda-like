@@ -30,3 +30,13 @@ class Player(pg.sprite.Sprite):
         self.pos.y = y
         self.rect.centerx = self.pos.x
         self.rect.centery = self.pos.y
+
+    def update(self, dt: float):
+        if self.look_dir.x == 1:
+            self.image = self.spritesheet.get_surface("idle_right")
+        elif self.look_dir.x == -1:
+            self.image = self.spritesheet.get_surface("idle_left")
+        elif self.look_dir.y == -1:
+            self.image = self.spritesheet.get_surface("idle_up")
+        elif self.look_dir.y == 1:
+            self.image = self.spritesheet.get_surface("idle_down")
