@@ -4,6 +4,36 @@
     {
       "name": "idle_up",
       "pos": [0,0]
+    },
+    {
+      "name": "walk_up_1",
+      "pos": [0,1]
+    },
+    {
+      "name": "walk_up_2",
+      "pos": [0,2]
+    },
+    {
+      "name": "walk_up_3",
+      "pos": [0,3]
+    },
+    {
+      "name": "idle_down",
+      "pos": [2,0]
+    },
+    {
+      "name": "idle_left",
+      "pos": [1,0]
+    },
+    {
+      "name": "idle_right",
+      "pos": [3,0]
     }
-  ]
+  ],
+  "animations" : {
+    "walk_up" : {
+      "sprites": ["idle_up","idle_up_1", "idle_up_2", "idle_up_3"],
+      "length": 1000 
+    }
+  }
 }

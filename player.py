@@ -10,7 +10,8 @@ class Player(pg.sprite.Sprite):
         self.spritesheet = Spritesheet()
         self.spritesheet.load_from_json("config/player.sprites.json")
 
-        self.image: pg.surface.Surface = self.spritesheet.get_player_surface()
+        self.image: pg.surface.Surface = self.spritesheet.get_surface(
+            "idle_up")
         self.rect: pg.rect.Rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
