@@ -23,8 +23,9 @@
 ### todo
 
 - [x] spritesheet refactor ( Spritesheet e WorldSpritesheet sono la stessa classe in fondo)
-- [ ] remove  `get_player_surface()`. animazioni negli spritesheet
-- [ ] sprite per il movimento del player, solo direzione
+- [x] remove  `get_player_surface()`. animazioni negli spritesheet
+- [x] sprite per il movimento del player, solo direzione
+- [x] walk animation per il player e movimento aggiornato
 
 ## credits
 

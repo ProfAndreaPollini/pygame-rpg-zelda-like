@@ -1,5 +1,6 @@
 
 
+from math import floor
 from typing import List
 
 
@@ -21,13 +22,16 @@ class Animation:
   def start(self):
     self.active = True
 
+  def __call__(self):
+    return self.sprite_names[floor(self.current)]
+
   def update(self, dt: float):
     if not self.active:
       return
 
     self.t += dt
 
-    if self.t > self.length_ms:
+    if self.t >= self.length_ms:
       if not self.loop:
         self.active = False
       else:

@@ -1,7 +1,13 @@
+from enum import Enum
 import pygame as pg
 from settings import SCREEN_SIZE, SPRITE_SCALE, SPRITE_SIZE
 from spritesheet import Spritesheet
+from utils import Direction
 
+
+class PlayerStatus(Enum):
+    IDLE = "idle"
+    WALK = "walk"
 
 class Player(pg.sprite.Sprite):
     def __init__(self, x, y):
@@ -16,10 +22,42 @@ class Player(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.pos: pg.math.Vector2 = pg.math.Vector2(x, y)
-        self.look_dir: pg.math.Vector2 = pg.math.Vector2()
+        self.look_dir: Direction = Direction.UP
+        self.dir: pg.math.Vector2 = pg.math.Vector2()
         self.v: float = 10.0
+        self.status: PlayerStatus = PlayerStatus.IDLE
+
+        # animations
+        # self.movement_animations = {
+        #     "walk_up": self.spritesheet.animations["walk_up"],
+        #     "walk_down": self.spritesheet.animations["walk_down"],
+        #     "walk_left": self.spritesheet.animations["walk_left"],
+        #     "walk_right": self.spritesheet.animations["walk_right"]
+        # }
+        self.animations = {
+            "movement": None
+        }
+
+    @property
+    def status_name(self):
+        return f"{self.status.value}_{self.look_dir.value}"
+
+    def update_direction(self):
+        old_look_dir = self.look_dir
+        if self.dir.x == 1:
+            self.look_dir = Direction.RIGHT
+        elif self.dir.x == -1:
+            self.look_dir = Direction.LEFT
+        elif self.dir.y == -1:
+            self.look_dir = Direction.UP
+        elif self.dir.y == 1:
+            self.look_dir = Direction.DOWN
+        return old_look_dir != self.look_dir
 
     def move(self, dx, dy):
+
+
+
         self.pos.x += dx * self.v
         self.pos.y += dy * self.v
         self.rect.centerx = self.pos.x
@@ -32,11 +70,34 @@ class Player(pg.sprite.Sprite):
         self.rect.centery = self.pos.y
 
     def update(self, dt: float):
-        if self.look_dir.x == 1:
-            self.image = self.spritesheet.get_surface("idle_right")
-        elif self.look_dir.x == -1:
-            self.image = self.spritesheet.get_surface("idle_left")
-        elif self.look_dir.y == -1:
-            self.image = self.spritesheet.get_surface("idle_up")
-        elif self.look_dir.y == 1:
-            self.image = self.spritesheet.get_surface("idle_down")
+        self.update_animations(dt)
+
+        if self.dir.magnitude_squared() > 0:
+            if self.status == PlayerStatus.IDLE:
+                self.status = PlayerStatus.WALK
+                self.move(self.dir.x, self.dir.y)
+                changed_dir = self.update_direction()
+                self.animations["movement"] = self.spritesheet.animations[self.status_name]
+                self.animations["movement"].reset()
+            else:
+                self.move(self.dir.x, self.dir.y)
+                changed_dir = self.update_direction()
+                if changed_dir:
+                    self.animations["movement"] = self.spritesheet.animations[self.status_name]
+                    
+
+            movement_animation = self.animations["movement"]
+            if movement_animation:
+                sprite_name = movement_animation()
+                print(f"{sprite_name=}")
+                self.image = self.spritesheet.get_surface(sprite_name)
+        else:
+            self.status = PlayerStatus.IDLE
+            self.image = self.spritesheet.get_surface(
+                "idle_" + self.look_dir.value)
+
+    def update_animations(self, dt: float):
+        for name, animation in self.animations.items():
+            if animation is None:
+                continue
+            animation.update(dt)

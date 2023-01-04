@@ -22,17 +22,65 @@
       "pos": [2,0]
     },
     {
+      "name": "walk_down_1",
+      "pos": [2,1]
+    },
+    {
+      "name": "walk_down_2",
+      "pos": [2,2]
+    },
+    {
+      "name": "walk_down_3",
+      "pos": [2,3]
+    },
+    {
       "name": "idle_left",
       "pos": [1,0]
     },
     {
+      "name": "walk_left_1",
+      "pos": [1,1]
+    },
+    {
+      "name": "walk_left_2",
+      "pos": [1,2]
+    },
+    {
+      "name": "walk_left_3",
+      "pos": [1,3]
+    },
+    {
       "name": "idle_right",
       "pos": [3,0]
+    },
+    {
+      "name": "walk_right_1",
+      "pos": [3,1]
+    },
+    {
+      "name": "walk_right_2",
+      "pos": [3,2]
+    },
+    {
+      "name": "walk_right_3",
+      "pos": [3,3]
     }
   ],
   "animations" : {
     "walk_up" : {
-      "sprites": ["idle_up","idle_up_1", "idle_up_2", "idle_up_3"],
+      "sprites": ["idle_up","walk_up_1", "walk_up_2", "walk_up_3"],
+      "length": 1000 
+    },
+    "walk_down" : {
+      "sprites": ["idle_down","walk_down_1", "walk_down_2", "walk_down_3"],
+      "length": 1000 
+    },
+    "walk_left" : {
+      "sprites": ["idle_left","walk_left_1", "walk_left_2", "walk_left_3"],
+      "length": 1000 
+    },
+    "walk_right" : {
+      "sprites": ["idle_right","walk_right_1", "walk_right_2", "walk_right_3"],
       "length": 1000 
     }
   }

@@ -60,8 +60,8 @@ def handle_input():
     if look_dir.magnitude_squared() > 1:  # se movimento diagonale, fix
         look_dir /= look_dir.magnitude()
 
-    player.look_dir = look_dir
-    player.move(look_dir.x, look_dir.y)
+    player.dir = look_dir
+    # player.move(look_dir.x, look_dir.y)
 
 
 camera = Camera(player, screen.get_width(), screen.get_height())
