@@ -165,3 +165,5 @@ cython_debug/
 assets/*.zip
 assets/**/*.ase
 assets/**/*.aseprite
+
+assets/0x72_DungeonTilesetII_v1.4

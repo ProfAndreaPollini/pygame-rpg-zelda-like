@@ -34,13 +34,18 @@ class Spritesheet:
     def __sprites_setup(self, config: List[Any]):
         for sprite_config in config:
             name, pos, size, scale = sprite_config["name"], sprite_config["pos"], sprite_config.get(
-                "size", (SPRITE_SIZE, SPRITE_SIZE)), sprite_config.get("scale", SPRITE_SCALE)
-            self.define_surface(name, pos[0], pos[1], size, scale)
+                "size", None), sprite_config.get("scale", SPRITE_SCALE)
+            if size is None:
+                self.define_surface(
+                    name, pos[0]*SPRITE_SIZE, pos[1]*SPRITE_SIZE, (SPRITE_SIZE, SPRITE_SIZE), scale)
+            else:
+                self.define_surface(name, pos[0], pos[1], size, scale)
 
     def define_surface(self, name: str, row: int, col: int, size=(SPRITE_SIZE, SPRITE_SIZE), scale=SPRITE_SCALE) -> None:
         "define a new surface for the current spritesheet"
+        print(f"define_srface({name}, {row},{col},{size},{scale})")
         sprite_subsurface = self.spritesheet.subsurface(
-            col*size[0], row*size[1], *size)
+            col, row, *size)
         original_size = sprite_subsurface.get_size()
 
         scaled = pg.transform.scale(

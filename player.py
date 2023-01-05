@@ -8,6 +8,7 @@ from utils import Direction
 class PlayerStatus(Enum):
     IDLE = "idle"
     WALK = "walk"
+    ATTACK = "attack"
 
 class Player(pg.sprite.Sprite):
     def __init__(self, x, y):
@@ -15,7 +16,8 @@ class Player(pg.sprite.Sprite):
 
         self.spritesheet = Spritesheet()
         self.spritesheet.load_from_json("config/player.sprites.json")
-
+        self.weapon_spritesheet = Spritesheet()
+        self.weapon_spritesheet.load_from_json("config/dungeon.sprites.json")
         self.image: pg.surface.Surface = self.spritesheet.get_surface(
             "idle_up")
         self.rect: pg.rect.Rect = self.image.get_rect()
@@ -27,7 +29,10 @@ class Player(pg.sprite.Sprite):
         self.dir: pg.math.Vector2 = pg.math.Vector2()
         self.v: float = 1.0
         self.status: PlayerStatus = PlayerStatus.IDLE
-
+        self.sword_image = self.weapon_spritesheet.get_surface("sword")
+        self.sword_rect = self.sword_image.get_rect()
+        self.sword_rect.left = x + 10
+        self.sword_rect.top = y + 10
         # animations
         # self.movement_animations = {
         #     "walk_up": self.spritesheet.animations["walk_up"],
@@ -38,6 +43,8 @@ class Player(pg.sprite.Sprite):
         self.animations = {
             "movement": None
         }
+
+        self.timers = {}
 
     @property
     def status_name(self):
@@ -96,9 +103,29 @@ class Player(pg.sprite.Sprite):
         self.rect.left = self.pos.x
         self.rect.top = self.pos.y
 
+    def update_timers(self, dt):
+        for timer in self.timers:
+            self.timers[timer] -= dt
+
+        for timer in list(self.timers.keys()):
+            if self.timers[timer] <= 0:
+                getattr(self, f"on_{timer}_timer_expire")()
+                del self.timers[timer]
+
+    def on_attack_timer_expire(self):
+        print("Attacco finito")
+
     def update(self, dt: float):
         self.update_animations(dt)
         self.update_position(dt)
+        self.update_timers(dt)
+        self.sword_rect.left = self.pos.x + 10
+        self.sword_rect.top = self.pos.y + 10
+
+    def attack(self):
+        # self.status = PlayerStatus.ATTACK
+        self.timers["attack"] = 200
+        print("attack start")
 
     def update_position(self, dt: float):
         if self.dir.magnitude_squared() > 0:

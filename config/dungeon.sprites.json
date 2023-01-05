@@ -1,0 +1,10 @@
+{
+  "spritesheet": "assets/0x72_DungeonTilesetII_v1.4.png",
+  "sprites": [
+    {
+      "name": "sword",
+      "pos": [16,292],
+      "size": [9,18]
+    }
+  ]
+}

@@ -68,6 +68,10 @@ def handle_input():
     elif keys[pg.K_w]:
         look_dir.y = -1
 
+    if keys[pg.K_SPACE]:
+        player.attack()
+    
+
     if look_dir.magnitude_squared() > 1:  # se movimento diagonale, fix
         look_dir /= look_dir.magnitude()
 
@@ -77,6 +81,7 @@ def handle_input():
 
 camera = Camera(player, screen.get_width(), screen.get_height())
 camera.add(player)
+
 while running:
     dt = clock.tick(60)
     for event in pg.event.get():
@@ -92,7 +97,6 @@ while running:
 
     player.update_y(dt)
     world.collide_vertical(player, dt)
-
 
     screen.fill("gray")
 
@@ -132,7 +136,8 @@ while running:
             assert sprite.rect is not None
         screen.blit(
             sprite.image, sprite.rect.copy().move(-camera.camera.x, -camera.camera.y))
-
+    screen.blit(
+        player.sword_image, player.sword_rect.copy().move(-camera.camera.x, -camera.camera.y))
     pg.display.update()
 
 
