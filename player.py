@@ -19,12 +19,13 @@ class Player(pg.sprite.Sprite):
         self.image: pg.surface.Surface = self.spritesheet.get_surface(
             "idle_up")
         self.rect: pg.rect.Rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect = self.rect.inflate(0.8, 0.8)
+        self.rect.left = x
+        self.rect.top = y
         self.pos: pg.math.Vector2 = pg.math.Vector2(x, y)
         self.look_dir: Direction = Direction.UP
         self.dir: pg.math.Vector2 = pg.math.Vector2()
-        self.v: float = 10.0
+        self.v: float = 1.0
         self.status: PlayerStatus = PlayerStatus.IDLE
 
         # animations
@@ -54,33 +55,61 @@ class Player(pg.sprite.Sprite):
             self.look_dir = Direction.DOWN
         return old_look_dir != self.look_dir
 
-    def move(self, dx, dy):
+    def get_desired_position(self, dt) -> pg.math.Vector2:
 
+        ret = pg.math.Vector2()
+        ret.x += self.dir.x * self.v * dt
+        ret.y += self.dir.y * self.v * dt
+        if ret.x != 0 and ret.y != 0:
+            print(self.dir, ret.x, ret.y)
+        return ret
 
+    def get_desired_rect(self, dt) -> pg.rect.Rect:
+        desired_pos = self.get_desired_position(dt)
+        desired_rect = self.rect.copy()
+        desired_rect.left += round(desired_pos.x)
+        desired_rect.top += round(desired_pos.y)
+        return desired_rect
 
-        self.pos.x += dx * self.v
-        self.pos.y += dy * self.v
-        self.rect.centerx = self.pos.x
-        self.rect.centery = self.pos.y
+    def move(self, dx, dy, dt):
+
+        self.pos.x += dx * self.v * dt
+        self.pos.y += dy * self.v * dt
+        self.rect.left = self.pos.x
+        self.rect.top = self.pos.y
+
+    def update_x(self, dt):
+        self.pos.x += self.dir.x * self.v * dt
+        #self.pos.y += dy * self.v * dt
+        self.rect.left = self.pos.x
+        #self.rect.centery = self.pos.y
+
+    def update_y(self, dt):
+        #self.pos.x += dx * self.v * dt
+        self.pos.y += self.dir.y * self.v * dt
+        #self.rect.centerx = self.pos.x
+        self.rect.top = self.pos.y
 
     def set(self, x, y):
         self.pos.x = x
         self.pos.y = y
-        self.rect.centerx = self.pos.x
-        self.rect.centery = self.pos.y
+        self.rect.left = self.pos.x
+        self.rect.top = self.pos.y
 
     def update(self, dt: float):
         self.update_animations(dt)
+        self.update_position(dt)
 
+    def update_position(self, dt: float):
         if self.dir.magnitude_squared() > 0:
             if self.status == PlayerStatus.IDLE:
                 self.status = PlayerStatus.WALK
-                self.move(self.dir.x, self.dir.y)
+                #self.move(self.dir.x, self.dir.y, dt)
                 changed_dir = self.update_direction()
                 self.animations["movement"] = self.spritesheet.animations[self.status_name]
                 self.animations["movement"].reset()
             else:
-                self.move(self.dir.x, self.dir.y)
+                #self.move(self.dir.x, self.dir.y, dt)
                 changed_dir = self.update_direction()
                 if changed_dir:
                     self.animations["movement"] = self.spritesheet.animations[self.status_name]
@@ -89,7 +118,7 @@ class Player(pg.sprite.Sprite):
             movement_animation = self.animations["movement"]
             if movement_animation:
                 sprite_name = movement_animation()
-                print(f"{sprite_name=}")
+                # print(f"{sprite_name=}")
                 self.image = self.spritesheet.get_surface(sprite_name)
         else:
             self.status = PlayerStatus.IDLE

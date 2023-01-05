@@ -26,6 +26,7 @@
 - [x] remove  `get_player_surface()`. animazioni negli spritesheet
 - [x] sprite per il movimento del player, solo direzione
 - [x] walk animation per il player e movimento aggiornato
+- [x] collisioni con la mappa (rimozione movimento diagonale)
 
 ## credits
 

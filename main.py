@@ -1,5 +1,7 @@
+from math import floor
 import pygame as pg
 from settings import SCREEN_SIZE, SPRITE_SCALE
+from typing import TYPE_CHECKING
 
 from player import Player
 from world import World
@@ -17,21 +19,30 @@ class Camera(pg.sprite.Group):
         self.player = player
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.old_center = self.player.rect.center
 
     def update(self):
         # Center the camera on the player
         self.center(self.player.rect.center)
 
     def center(self, center):
-        # Keep the center of the camera within the boundaries of the game world
-        center_x = max(center[0], self.screen_width // 2)
-        # center_x = min(center_x, self.player.image.width -
-        #    self.screen_width // 2)
-        center_y = max(center[1], self.screen_height // 2)
-        # center_y = min(center_y, self.player.image.height -
-        #    self.screen_height // 2)
+        center_x = center[0]
+        center_y = center[1]
+        # print(abs((center[0] -self.old_center[0])**2  - (self.old_center[1] - center[1])**2))
+        if abs((center[0] - self.old_center[0])**2 - (self.old_center[1] - center[1])**2) > 100:
+            # Keep the center of the camera within the boundaries of the game world
+            # max(center[0], self.screen_width // 2)
+            center_x = 0.5*center[0] + 0.5*self.old_center[0]
+            # center_x = min(center_x, self.player.image.width -
+            #    self.screen_width // 2)
+            # max(center[1], self.screen_height // 2)
+            center_y = 0.5*center[1] + 0.5*self.old_center[1]
+            # center_y = min(center_y, self.player.image.height -
+            #    self.screen_height // 2)
+            self.old_center = center
         self.camera = pg.rect.Rect(center_x - self.screen_width // 2, center_y -
                                    self.screen_height // 2, self.screen_width, self.screen_height)
+
 
 
 running = True
@@ -50,11 +61,11 @@ def handle_input():
 
     if keys[pg.K_a]:
         look_dir.x = -1
-    if keys[pg.K_s]:
+    elif keys[pg.K_s]:
         look_dir.y = 1
-    if keys[pg.K_d]:
+    elif keys[pg.K_d]:
         look_dir.x = 1
-    if keys[pg.K_w]:
+    elif keys[pg.K_w]:
         look_dir.y = -1
 
     if look_dir.magnitude_squared() > 1:  # se movimento diagonale, fix
@@ -73,7 +84,15 @@ while running:
             running = False
 
     handle_input()
+
     player.update(dt)
+
+    player.update_x(dt)
+    world.collide_horizontal(player, dt)
+
+    player.update_y(dt)
+    world.collide_vertical(player, dt)
+
 
     screen.fill("gray")
 
@@ -81,10 +100,38 @@ while running:
     # screen.blit(player.image, player.rect)
     camera.update()
     screen.blit(world.surface, (-camera.camera.x, -camera.camera.y))
+
+    desired_rect = player.get_desired_rect(dt)
+    desired_rect.left -= camera.camera.x
+    desired_rect.top -= camera.camera.y
+    # print(desired_rect)
+    pg.draw.rect(screen, (0, 0, 255), desired_rect, 2)
+    # print("NW = ",len(world.non_walkable_sprites.sprites()))
+
+    for nwp in world.non_walkable_sprites.sprites():
+        assert nwp.rect is not None
+        # screen.blit(nwp.image, (nwp.rect.left-camera.camera.x,nwp.rect.top -camera.camera.y))
+        pg.draw.rect(screen, (255, 0, 0), nwp.rect.copy(
+        ).move(-camera.camera.x, -camera.camera.y), 4)
+    bb = player.rect.copy()
+    bb.left -= camera.camera.x
+    bb.top -= camera.camera.y
+    pg.draw.rect(screen, (255, 255, 0), bb, 2)
+
+    collisions = pg.sprite.spritecollide(
+        player, world.non_walkable_sprites, False)
+    if collisions:
+        for c in collisions:
+            assert c.rect is not None
+            screen.blit(c.image, c.rect.copy(
+            ).move(-camera.camera.x, -camera.camera.y))
     # Draw the objects in the camera group on the screen
-    for sprite in camera:
+    for sprite in camera.sprites():
+        if TYPE_CHECKING:
+            assert sprite.image is not None
+            assert sprite.rect is not None
         screen.blit(
-            sprite.image, sprite.rect.move(-camera.camera.x, -camera.camera.y))
+            sprite.image, sprite.rect.copy().move(-camera.camera.x, -camera.camera.y))
 
     pg.display.update()
 
