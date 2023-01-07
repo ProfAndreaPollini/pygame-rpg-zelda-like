@@ -1,9 +1,13 @@
 from math import floor
 import pygame as pg
+from debug import DebugLayer
 from settings import SCREEN_SIZE, SPRITE_SCALE
 from typing import TYPE_CHECKING
 
+
 from player import Player
+from spritesheet import Spritesheets
+from utils import Direction
 from world import World
 from camera import Camera
 from ui import UI
@@ -11,6 +15,8 @@ from ui import UI
 pg.init()
 screen = pg.display.set_mode(SCREEN_SIZE)
 clock = pg.time.Clock()
+
+spritesheets = Spritesheets()
 
 player = Player(0, 0)
 
@@ -48,10 +54,10 @@ def handle_input():
 
 
 camera = Camera(player, screen.get_width(), screen.get_height())
-camera.add(player)
+player.add(camera)
 
 ui = UI(player)
-
+debug_layer = DebugLayer(camera)
 while running:
     dt = clock.tick(60)
     for event in pg.event.get():
@@ -72,46 +78,72 @@ while running:
 
     # show sprite
     # screen.blit(player.image, player.rect)
-    camera.update()
-    screen.blit(world.surface, (-camera.camera.x, -camera.camera.y))
+    camera.update()  # camera update
+    screen.blit(world.surface, camera.world_to_screen((0, 0)))
 
-    desired_rect = player.get_desired_rect(dt)
-    desired_rect.left -= camera.camera.x
-    desired_rect.top -= camera.camera.y
-    # print(desired_rect)
-    pg.draw.rect(screen, (0, 0, 255), desired_rect, 2)
+    debug_layer.draw_rect_outline(player.get_desired_rect(dt), (0, 0, 255), 2)
+    # desired_rect = player.get_desired_rect(dt)
+    # desired_rect.left -= camera.camera.x
+    # desired_rect.top -= camera.camera.y
+    # # print(desired_rect)
+    # pg.draw.rect(screen, (0, 0, 255), desired_rect, 2)
     # print("NW = ",len(world.non_walkable_sprites.sprites()))
 
     for nwp in world.non_walkable_sprites.sprites():
         assert nwp.rect is not None
         # screen.blit(nwp.image, (nwp.rect.left-camera.camera.x,nwp.rect.top -camera.camera.y))
-        pg.draw.rect(screen, (255, 0, 0), nwp.rect.copy(
-        ).move(-camera.camera.x, -camera.camera.y), 4)
-    bb = player.rect.copy()
-    bb.left -= camera.camera.x
-    bb.top -= camera.camera.y
-    pg.draw.rect(screen, (255, 255, 0), bb, 2)
+        # pg.draw.rect(screen, (255, 0, 0), nwp.rect.copy(
+        # ).move(-camera.camera.x, -camera.camera.y), 4)
+        debug_layer.draw_rect_outline(nwp.rect.copy(
+        ), (255, 0, 0), 2)
+
+    # bb = player.rect.copy()
+    # bb.left -= camera.camera.x
+    # bb.top -= camera.camera.y
+    # pg.draw.rect(screen, (255, 255, 0), bb, 2)
+    debug_layer.draw_rect_outline(player.rect.copy(), (255, 255, 0), 2)
 
     collisions = pg.sprite.spritecollide(
         player, world.non_walkable_sprites, False)
     if collisions:
         for c in collisions:
-            assert c.rect is not None
-            screen.blit(c.image, c.rect.copy(
-            ).move(-camera.camera.x, -camera.camera.y))
+            if TYPE_CHECKING:
+                assert c.rect is not None
+                assert c.image is not None
+            # screen.blit(c.image, c.rect.copy(
+            # ).move(-camera.camera.x, -camera.camera.y))
+            debug_layer.draw_surface(c.image, c.rect)
     # Draw the objects in the camera group on the screen
     for sprite in camera.sprites():
         if TYPE_CHECKING:
             assert sprite.image is not None
             assert sprite.rect is not None
-        screen.blit(
-            sprite.image, sprite.rect.copy().move(-camera.camera.x, -camera.camera.y))
+        # screen.blit(
+        #     sprite.image, sprite.rect.copy().move(-camera.camera.x, -camera.camera.y))
+        debug_layer.draw_surface(sprite.image, sprite.rect)
+
 
     if player.attacking:
+        assert player.weapon.image is not None
+        angle = 0
+        match player.look_dir:
+            case Direction.UP: angle = 0
+            case Direction.DOWN: angle = -180
+            case Direction.LEFT: angle = 90
+            case Direction.RIGHT: angle = -90
         screen.blit(
-            player.sword_image, player.sword_rect.copy().move(-camera.camera.x, -camera.camera.y))
-    
+            pg.transform.rotate(player.weapon.image, angle), player.weapon.rect.copy(
+            ).move(-camera.camera.x, -camera.camera.y))
+
     ui.draw()
+
+    pg.draw.line(screen, (255, 255, 255), player.rect.copy(
+    ).move(-camera.camera.x, -camera.camera.y).center, pg.mouse.get_pos(), 3)
+    # player_screen_pos=player.rect.copy(
+    # ).move(-camera.camera.x, -camera.camera.y).center
+
+
+
     pg.display.update()
 
 

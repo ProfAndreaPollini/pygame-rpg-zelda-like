@@ -1,3 +1,4 @@
+from typing import Tuple
 import pygame as pg
 
 
@@ -8,6 +9,17 @@ class Camera(pg.sprite.Group):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.old_center = self.player.rect.center
+
+    def world_to_screen(self, pos: Tuple[int, int]):
+        return (pos[0]-self.camera.x, pos[1]-self.camera.y)
+
+    @property
+    def x(self):
+        return self.camera.x
+
+    @property
+    def y(self):
+        return self.camera.y
 
     def update(self):
         # Center the camera on the player

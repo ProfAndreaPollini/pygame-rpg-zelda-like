@@ -62,3 +62,23 @@ class Spritesheet:
     def get_surface(self, name: str) -> pg.surface.Surface:
         """return the surface by name"""
         return self.sprites.get(name, pg.surface.Surface((SPRITE_SIZE*SPRITE_SCALE, SPRITE_SIZE*SPRITE_SCALE)))
+
+
+class Spritesheets:
+    _instance = None
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(Spritesheets, cls).__new__(
+                cls, *args, **kwargs)
+        return cls._instance
+   # _shared_state: Dict[str, Spritesheet] = {}
+
+    def __init__(self):
+        # self.__dict__ = self._shared_state
+        self.spritesheet = Spritesheet()
+        self.spritesheet.load_from_json(
+            "config/player.sprites.json")
+        self.weapon_spritesheet = Spritesheet()
+        self.weapon_spritesheet.load_from_json(
+            "config/dungeon.sprites.json")

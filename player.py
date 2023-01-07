@@ -1,8 +1,9 @@
 from enum import Enum
 import pygame as pg
 from settings import SCREEN_SIZE, SPRITE_SCALE, SPRITE_SIZE
-from spritesheet import Spritesheet
+from spritesheet import Spritesheet, Spritesheets
 from utils import Direction
+from weapons.sword import Sword
 
 
 class PlayerStatus(Enum):
@@ -10,14 +11,18 @@ class PlayerStatus(Enum):
     WALK = "walk"
     ATTACK = "attack"
 
+
 class Player(pg.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        s = Spritesheets()
 
-        self.spritesheet = Spritesheet()
-        self.spritesheet.load_from_json("config/player.sprites.json")
-        self.weapon_spritesheet = Spritesheet()
-        self.weapon_spritesheet.load_from_json("config/dungeon.sprites.json")
+        self.spritesheet = s.spritesheet
+        self.weapon_spritesheet = s.weapon_spritesheet
+        # self.spritesheet = Spritesheet()
+        # self.spritesheet.load_from_json("config/player.sprites.json")
+        # self.weapon_spritesheet = Spritesheet()
+        # self.weapon_spritesheet.load_from_json("config/dungeon.sprites.json")
         self.image: pg.surface.Surface = self.spritesheet.get_surface(
             "idle_up")
         self.rect: pg.rect.Rect = self.image.get_rect()
@@ -29,10 +34,14 @@ class Player(pg.sprite.Sprite):
         self.dir: pg.math.Vector2 = pg.math.Vector2()
         self.v: float = 1.0
         self.status: PlayerStatus = PlayerStatus.IDLE
-        self.sword_image = self.weapon_spritesheet.get_surface("sword")
-        self.sword_rect = self.sword_image.get_rect()
-        self.sword_rect.left = x + 10
-        self.sword_rect.top = y + 10
+        # self.sword_image = self.weapon_spritesheet.get_surface("sword")
+        # self.sword_rect = self.sword_image.get_rect()
+        # self.sword_rect.left = x + 10
+        # self.sword_rect.top = y + 10
+        self.weapon = Sword()
+        self.weapon.add(self.groups())
+        self.weapon.x = x+10
+        self.weapon.y = y+10
         self.attacking = False
         # animations
         # self.movement_animations = {
@@ -88,14 +97,14 @@ class Player(pg.sprite.Sprite):
 
     def update_x(self, dt):
         self.pos.x += self.dir.x * self.v * dt
-        #self.pos.y += dy * self.v * dt
+        # self.pos.y += dy * self.v * dt
         self.rect.left = self.pos.x
-        #self.rect.centery = self.pos.y
+        # self.rect.centery = self.pos.y
 
     def update_y(self, dt):
-        #self.pos.x += dx * self.v * dt
+        # self.pos.x += dx * self.v * dt
         self.pos.y += self.dir.y * self.v * dt
-        #self.rect.centerx = self.pos.x
+        # self.rect.centerx = self.pos.x
         self.rect.top = self.pos.y
 
     def set(self, x, y):
@@ -119,32 +128,39 @@ class Player(pg.sprite.Sprite):
 
     def update(self, dt: float):
         self.update_animations(dt)
-        self.update_position(dt)
+        if not self.attacking:
+            self.update_position(dt)
+            dx, dy = 0, 0
+            match self.look_dir:
+                case Direction.UP: dy = -(self.rect.h//2+20)
+                case Direction.DOWN: dy = self.rect.h//2+20
+                case Direction.LEFT: dx = -(20+self.rect.w//2)
+                case Direction.RIGHT: dx = 20+self.rect.w//2
+            self.weapon.set(self.pos.x + dx, self.pos.y + dy)
         self.update_timers(dt)
-        self.sword_rect.left = self.pos.x + 10  # type: ignore
-        self.sword_rect.top = self.pos.y + 10  # type: ignore
+
 
     def attack(self):
         # self.status = PlayerStatus.ATTACK
-        self.timers["attack"] = 200
-        print("attack start")
-        self.attacking = True
+        if not self.attacking:
+            self.timers["attack"] = 200
+            print("attack start")
+            self.attacking = True
 
     def update_position(self, dt: float):
         if self.dir.magnitude_squared() > 0:
             if self.status == PlayerStatus.IDLE:
                 self.status = PlayerStatus.WALK
-                #self.move(self.dir.x, self.dir.y, dt)
+                # self.move(self.dir.x, self.dir.y, dt)
                 changed_dir = self.update_direction()
                 # type: ignore
                 self.animations["movement"] = self.spritesheet.animations[self.status_name]
                 self.animations["movement"].reset()
             else:
-                #self.move(self.dir.x, self.dir.y, dt)
+                # self.move(self.dir.x, self.dir.y, dt)
                 changed_dir = self.update_direction()
                 if changed_dir:
                     self.animations["movement"] = self.spritesheet.animations[self.status_name]
-                    
 
             movement_animation = self.animations["movement"]
             if movement_animation:
