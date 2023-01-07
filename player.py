@@ -33,6 +33,7 @@ class Player(pg.sprite.Sprite):
         self.sword_rect = self.sword_image.get_rect()
         self.sword_rect.left = x + 10
         self.sword_rect.top = y + 10
+        self.attacking = False
         # animations
         # self.movement_animations = {
         #     "walk_up": self.spritesheet.animations["walk_up"],
@@ -114,18 +115,20 @@ class Player(pg.sprite.Sprite):
 
     def on_attack_timer_expire(self):
         print("Attacco finito")
+        self.attacking = False
 
     def update(self, dt: float):
         self.update_animations(dt)
         self.update_position(dt)
         self.update_timers(dt)
-        self.sword_rect.left = self.pos.x + 10
-        self.sword_rect.top = self.pos.y + 10
+        self.sword_rect.left = self.pos.x + 10  # type: ignore
+        self.sword_rect.top = self.pos.y + 10  # type: ignore
 
     def attack(self):
         # self.status = PlayerStatus.ATTACK
         self.timers["attack"] = 200
         print("attack start")
+        self.attacking = True
 
     def update_position(self, dt: float):
         if self.dir.magnitude_squared() > 0:
@@ -133,6 +136,7 @@ class Player(pg.sprite.Sprite):
                 self.status = PlayerStatus.WALK
                 #self.move(self.dir.x, self.dir.y, dt)
                 changed_dir = self.update_direction()
+                # type: ignore
                 self.animations["movement"] = self.spritesheet.animations[self.status_name]
                 self.animations["movement"].reset()
             else:

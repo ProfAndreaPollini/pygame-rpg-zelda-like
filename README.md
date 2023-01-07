@@ -29,6 +29,7 @@
 - [x] collisioni con la mappa (rimozione movimento diagonale)
 - [x] display arma per il player
 - [x] creazione azione di attacco e gestione timer nel player
+- [x] creazione ui per il gioco (solo scheletro)
 - [ ] attacco nella direzione in cui sto guardando
 
 ## credits

@@ -95,39 +95,39 @@ class World:
                     player.pos.x = player.rect.left
                     player.dir.x = 0
 
-    def collide_old(self, player: Player, dt: float):
-        desired_rect = player.rect.copy()
-        desired_rect.centerx += floor(player.v*dt*player.dir.x)
-        desired_rect.centery += floor(player.v*dt*player.dir.y)
+    # def collide_old(self, player: Player, dt: float):
+    #     desired_rect = player.rect.copy()
+    #     desired_rect.centerx += floor(player.v*dt*player.dir.x)
+    #     desired_rect.centery += floor(player.v*dt*player.dir.y)
 
-        if player.dir.magnitude_squared() > 0:
-            # print(player.rect,desired_rect)
-            for sprite in self.non_walkable_sprites.sprites():
-                if desired_rect.colliderect(sprite.rect):
-                    print(f"{player.dir=}")
-                    if desired_rect.left < sprite.rect.right and player.look_dir == Direction.LEFT:
-                        player.dir.x = (sprite.rect.right -
-                                        desired_rect.left-0)/(player.v * dt)
-                        player.dir.y = 0
-                    elif desired_rect.right > sprite.rect.left and player.look_dir == Direction.RIGHT:
-                        player.dir.x = (sprite.rect.left -
-                                        desired_rect.right+0)/(player.v * dt)
-                        player.dir.y = 0
+    #     if player.dir.magnitude_squared() > 0:
+    #         # print(player.rect,desired_rect)
+    #         for sprite in self.non_walkable_sprites.sprites():
+    #             if desired_rect.colliderect(sprite.rect):
+    #                 print(f"{player.dir=}")
+    #                 if desired_rect.left < sprite.rect.right and player.look_dir == Direction.LEFT:
+    #                     player.dir.x = (sprite.rect.right -
+    #                                     desired_rect.left-0)/(player.v * dt)
+    #                     player.dir.y = 0
+    #                 elif desired_rect.right > sprite.rect.left and player.look_dir == Direction.RIGHT:
+    #                     player.dir.x = (sprite.rect.left -
+    #                                     desired_rect.right+0)/(player.v * dt)
+    #                     player.dir.y = 0
 
-                    if desired_rect.top < sprite.rect.bottom and player.look_dir == Direction.UP:
-                        player.dir.y = (sprite.rect.bottom -
-                                        desired_rect.top+0)/(player.v * dt)
-                        player.dir.x = 0
-                    elif desired_rect.bottom > sprite.rect.top and player.look_dir == Direction.DOWN:
-                        player.dir.y = (sprite.rect.top -
-                                        desired_rect.bottom-0)/(player.v * dt)
-                        player.dir.x = 0
-                    player.dir.x = min(max(player.dir.x, -1), 1)
-                    player.dir.y = min(max(player.dir.y, -1), 1)
-                    print(f"{desired_rect=}")
-                    print(f"{sprite.rect=}")
-                    print(f"{player.dir=}")
-                    print("-"*80)
+    #                 if desired_rect.top < sprite.rect.bottom and player.look_dir == Direction.UP:
+    #                     player.dir.y = (sprite.rect.bottom -
+    #                                     desired_rect.top+0)/(player.v * dt)
+    #                     player.dir.x = 0
+    #                 elif desired_rect.bottom > sprite.rect.top and player.look_dir == Direction.DOWN:
+    #                     player.dir.y = (sprite.rect.top -
+    #                                     desired_rect.bottom-0)/(player.v * dt)
+    #                     player.dir.x = 0
+    #                 player.dir.x = min(max(player.dir.x, -1), 1)
+    #                 player.dir.y = min(max(player.dir.y, -1), 1)
+    #                 print(f"{desired_rect=}")
+    #                 print(f"{sprite.rect=}")
+    #                 print(f"{player.dir=}")
+    #                 print("-"*80)
 
         # collisions = pg.sprite.spritecollide(player,self.non_walkable_sprites,False)
         # pg.sprite.g
@@ -233,9 +233,9 @@ class World:
             s = tmxdata.get_tile_image_by_gid(gid)
             if s is not None:
                 world.spritesheet.add_sprite(str(gid), s)
-        print(list(tmxdata.get_tile_colliders()))
-        for gid, collider in tmxdata.get_tile_colliders():
-            print(gid, [x.as_points for x in collider])
+        # print(list(tmxdata.get_tile_colliders()))
+        # for gid, collider in tmxdata.get_tile_colliders():
+        #     print(gid, [x.as_points for x in collider])
 
         # print(list(tmxdata.get_tile_locations_by_gid(0)))
         # for row in range(terrain.height):

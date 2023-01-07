@@ -5,44 +5,14 @@ from typing import TYPE_CHECKING
 
 from player import Player
 from world import World
+from camera import Camera
+from ui import UI
 
 pg.init()
 screen = pg.display.set_mode(SCREEN_SIZE)
 clock = pg.time.Clock()
 
 player = Player(0, 0)
-
-
-class Camera(pg.sprite.Group):
-    def __init__(self, player, screen_width, screen_height):
-        super().__init__()
-        self.player = player
-        self.screen_width = screen_width
-        self.screen_height = screen_height
-        self.old_center = self.player.rect.center
-
-    def update(self):
-        # Center the camera on the player
-        self.center(self.player.rect.center)
-
-    def center(self, center):
-        center_x = center[0]
-        center_y = center[1]
-        # print(abs((center[0] -self.old_center[0])**2  - (self.old_center[1] - center[1])**2))
-        if abs((center[0] - self.old_center[0])**2 - (self.old_center[1] - center[1])**2) > 100:
-            # Keep the center of the camera within the boundaries of the game world
-            # max(center[0], self.screen_width // 2)
-            center_x = 0.5*center[0] + 0.5*self.old_center[0]
-            # center_x = min(center_x, self.player.image.width -
-            #    self.screen_width // 2)
-            # max(center[1], self.screen_height // 2)
-            center_y = 0.5*center[1] + 0.5*self.old_center[1]
-            # center_y = min(center_y, self.player.image.height -
-            #    self.screen_height // 2)
-            self.old_center = center
-        self.camera = pg.rect.Rect(center_x - self.screen_width // 2, center_y -
-                                   self.screen_height // 2, self.screen_width, self.screen_height)
-
 
 
 running = True
@@ -52,7 +22,6 @@ dt = 0
 world = World.from_tmx("assets/maps/map0.tmx",
                        "config/world.sprites.json", player)
 
-print(player.rect.center)
 
 def handle_input():
     keys = pg.key.get_pressed()  # recupero tutti i tasti premuti (List[bool])
@@ -70,7 +39,6 @@ def handle_input():
 
     if keys[pg.K_SPACE]:
         player.attack()
-    
 
     if look_dir.magnitude_squared() > 1:  # se movimento diagonale, fix
         look_dir /= look_dir.magnitude()
@@ -81,6 +49,8 @@ def handle_input():
 
 camera = Camera(player, screen.get_width(), screen.get_height())
 camera.add(player)
+
+ui = UI(player)
 
 while running:
     dt = clock.tick(60)
@@ -136,8 +106,12 @@ while running:
             assert sprite.rect is not None
         screen.blit(
             sprite.image, sprite.rect.copy().move(-camera.camera.x, -camera.camera.y))
-    screen.blit(
-        player.sword_image, player.sword_rect.copy().move(-camera.camera.x, -camera.camera.y))
+
+    if player.attacking:
+        screen.blit(
+            player.sword_image, player.sword_rect.copy().move(-camera.camera.x, -camera.camera.y))
+    
+    ui.draw()
     pg.display.update()
 
 
