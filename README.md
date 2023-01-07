@@ -28,7 +28,7 @@
 - [x] walk animation per il player e movimento aggiornato
 - [x] collisioni con la mappa (rimozione movimento diagonale)
 - [x] display arma per il player
-- [ ] creazione azione di attacco e gestione timer nel player
+- [x] creazione azione di attacco e gestione timer nel player
 - [ ] attacco nella direzione in cui sto guardando
 
 ## credits
